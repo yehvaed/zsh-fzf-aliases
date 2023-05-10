@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+alias() {
+    if [[ "$@" == *=* ]]; then
+        builtin alias $@
+        return $?
+    fi
+
+    if [[ -t 1 && ! '$-' == *i* ]]; then
+        local alias=$(
+            builtin alias |
+                sed -E "s/=/ → /" |
+                sed -E "s/'([^']+)'/\1/g" |
+                column -t -s '→' |
+                fzf --reverse --height 70% --preview "[[ -n "{2..}" ]] && echo {2..}" --preview-window=down,2,wrap -e |
+                cut -d ' ' -f1
+        )
+
+        if [[ -n "${alias}" ]]; then
+            echo "→ executing ${alias} "
+            eval ${alias}
+        fi
+
+        return
+    else
+        builtin alias
+    fi
+}
