@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+builtin alias |
+    grep -v "alias=" |
+    sed -E "s/=/ → /" |
+    sed -E "s/'([^']+)'/\1/g" |
+    column -t -s '→' |
+    fzf --reverse --preview "[[ -n "{2..}" ]] && echo {2..}" --preview-window=down,2,wrap -e ${1+--query="$*"} |
+    cut -d ' ' -f1
+

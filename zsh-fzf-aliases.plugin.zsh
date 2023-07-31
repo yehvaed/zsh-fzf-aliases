@@ -7,5 +7,7 @@ if [[ $PMSPEC != *f* ]] {
   fpath+=( "${0:h}/functions" )
 }
 
-autoload -Uz .fast-fzf-aliases
-alias "alias"=".fast-fzf-aliases"
+autoload -Uz .list-aliases
+
+zle -N .list-aliases
+bindkey '^A' .list-aliases
